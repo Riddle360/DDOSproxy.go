@@ -7,7 +7,7 @@ Panel de control web moderno y ultrarrápido desarrollado en **Go (Golang)** con
 ## Vista Previa
 
 ### Panel Principal
-<img width="1550" height="881" alt="image" src="https://github.com/user-attachments/assets/c3fa6130-679a-4f57-bce1-f9271adf900c" />
+<img width="869" height="826" alt="image" src="https://github.com/user-attachments/assets/c1088f87-7021-4890-b4ac-0dd2caa97735" />
 
 ### Editor de Proxies
 <img width="1905" height="872" alt="image" src="https://github.com/user-attachments/assets/ab020edf-3e36-4189-9fb3-7de9a63152cf" />
