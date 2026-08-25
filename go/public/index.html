@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Dark Pastel - Control de Flujo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#181619] text-[#e2d9dc] h-screen flex items-center justify-center font-sans select-none p-4 overflow-hidden">
+
+    <main class="w-full max-w-5xl h-[90vh] relative flex flex-col">
+        <div class="bg-[#201d22] border border-[#2d282e] rounded-3xl p-7 shadow-2xl shadow-black/50 grid grid-cols-1 md:grid-cols-2 gap-6 h-full overflow-hidden">
+            
+            <!-- COLUMNA IZQUIERDA: Panel de Control -->
+            <div class="space-y-6 flex flex-col justify-between overflow-y-auto pr-1">
+                <div>
+                    <!-- Cabecera -->
+                    <div class="border-b border-[#2d282e] pb-4 flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(244,114,182,0.6)]"></span>
+                            <h1 class="text-xs font-bold text-pink-300 tracking-wider uppercase">Panel de Control Go</h1>
+                        </div>
+                        <button onclick="abrirModalProxies()" class="text-xs bg-[#2a252c] hover:bg-[#342e36] text-pink-300 font-medium px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 border border-[#3a323d]">
+                            ⚙️ Configurar Proxies
+                        </button>
+                    </div>
+
+                    <!-- Contadores -->
+                    <div class="grid grid-cols-5 gap-1 bg-[#141215] border border-[#2d282e] p-2.5 rounded-2xl text-center mb-4">
+                        <div>
+                            <div class="text-[8px] text-[#a3979b] uppercase font-semibold">SOCKS5</div>
+                            <div id="count-socks5" class="text-xs font-bold text-pink-300">0</div>
+                        </div>
+                        <div class="border-x border-[#2d282e]">
+                            <div class="text-[8px] text-[#a3979b] uppercase font-semibold">SOCKS4</div>
+                            <div id="count-socks4" class="text-xs font-bold text-pink-300">0</div>
+                        </div>
+                        <div class="border-r border-[#2d282e]">
+                            <div class="text-[8px] text-[#a3979b] uppercase font-semibold">HTTP</div>
+                            <div id="count-http" class="text-xs font-bold text-pink-300">0</div>
+                        </div>
+                        <div class="border-r border-[#2d282e]">
+                            <div class="text-[8px] text-[#a3979b] uppercase font-semibold">Listos</div>
+                            <div id="count-total" class="text-xs font-bold text-emerald-400">0</div>
+                        </div>
+                        <div>
+                            <div class="text-[8px] text-pink-400 uppercase font-bold">Enviados</div>
+                            <div id="count-requests" class="text-xs font-bold text-pink-400">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario Principal -->
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#a3979b] mb-1">IP o URL de Destino</label>
+                            <input type="text" placeholder="ej. 127.0.0.1 o dominio.com" id="IP" class="w-full bg-[#181619] border border-[#2d282e] rounded-xl px-3.5 py-2 text-xs text-[#f4ecf0] placeholder-[#6b6166] focus:outline-none focus:border-pink-400 transition shadow-inner">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-[#a3979b] mb-1">Puerto</label>
+                                <input type="text" placeholder="80" id="puerto" class="w-full bg-[#181619] border border-[#2d282e] rounded-xl px-3.5 py-2 text-xs text-[#f4ecf0] placeholder-[#6b6166] focus:outline-none focus:border-pink-400 transition shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#a3979b] mb-1">Protocolo</label>
+                                <select id="protocolo" class="w-full bg-[#181619] border border-[#2d282e] rounded-xl px-3.5 py-2 text-xs text-[#f4ecf0] focus:outline-none focus:border-pink-400 transition shadow-inner">
+                                    <option value="HTTP_Flood">HTTP Flood</option>
+                                    <option value="TCP_SYN_Flood">TCP Flood</option>
+                                    <option value="UDP_Flood">UDP Flood</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-[#a3979b] mb-1">Tam. Paquete (Bytes)</label>
+                                <input type="number" value="512" id="tamano" class="w-full bg-[#181619] border border-[#2d282e] rounded-xl px-3.5 py-2 text-xs text-[#f4ecf0] focus:outline-none focus:border-pink-400 transition shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#a3979b] mb-1">Delay (ms)</label>
+                                <input type="number" value="0" id="delay" class="w-full bg-[#181619] border border-[#2d282e] rounded-xl px-3.5 py-2 text-xs text-[#f4ecf0] focus:outline-none focus:border-pink-400 transition shadow-inner" placeholder="0 = sin pausa">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-[#a3979b] mb-1">Modo de Operación</label>
+                            <select id="modoOrigen" class="w-full bg-[#181619] border border-[#2d282e] rounded-xl px-3.5 py-2 text-xs text-[#f4ecf0] focus:outline-none focus:border-pink-400 transition shadow-inner">
+                                <option value="directo">Directo (Sin Proxies)</option>
+                                <option value="proxies">Usar Lista Masiva Combinada (SOCKS5 + SOCKS4 + HTTP)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="flex gap-3 pt-3">
+                    <button onclick="atacar()" class="flex-1 bg-pink-400 hover:bg-pink-500 text-stone-950 font-bold py-3 rounded-xl text-xs tracking-wide transition shadow-md shadow-pink-400/10">
+                        Iniciar Acción
+                    </button>
+                    <button onclick="pararAtaque()" class="flex-1 bg-[#2a252c] hover:bg-[#342e36] text-[#b8aab0] hover:text-white font-semibold py-3 rounded-xl text-xs tracking-wide transition border border-[#3a323d]">
+                        Detener Todo
+                    </button>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: Consola de Logs Estética y Optimizada -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex justify-between items-center mb-1.5 flex-none">
+                    <label class="text-xs font-semibold text-[#a3979b]">Registro en Vivo por Proxy</label>
+                    <button onclick="limpiarLogs()" class="text-[10px] text-pink-400 hover:underline">Limpiar Consola</button>
+                </div>
+                <div id="terminal-logs" class="w-full bg-[#141215] border border-[#2d282e] rounded-xl p-3.5 text-[11px] text-pink-300 font-mono flex-1 overflow-y-auto shadow-inner break-all whitespace-pre-wrap">
+                    <div>> Sistema preparado. Verás el impacto de cada proxy aquí...</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL CONFIGURACIÓN DE PROXIES -->
+    <div id="modalProxies" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-[#201d22] border border-[#2d282e] rounded-3xl p-7 w-full max-w-lg space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-[#2d282e] pb-3">
+                <h2 class="text-xs font-bold text-pink-300 uppercase tracking-wider">Gestión de Proxies</h2>
+                <button onclick="cerrarModalProxies()" class="text-[#a3979b] hover:text-white text-sm font-bold">✕</button>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-[#a3979b] mb-1.5">Seleccionar Archivo:</label>
+                <select id="tipoProxyModal" onchange="cargarProxiesModal()" class="w-full bg-[#181619] border border-[#2d282e] rounded-xl px-3.5 py-2.5 text-xs text-[#f4ecf0] focus:outline-none focus:border-pink-400 transition mb-3 shadow-inner">
+                    <option value="socks5">SOCKS5 (proxies.txt)</option>
+                    <option value="socks4">SOCKS4 (proxies_socks4.txt)</option>
+                    <option value="http">HTTP/HTTPS (proxies_http.txt)</option>
+                </select>
+
+                <label class="block text-xs font-semibold text-[#a3979b] mb-1.5">Lista de Proxies (IP:PUERTO)</label>
+                <textarea id="textareaProxies" rows="9" class="w-full bg-[#141215] border border-[#2d282e] rounded-xl p-3.5 text-xs text-pink-200 font-mono focus:outline-none focus:border-pink-400 transition shadow-inner"></textarea>
+            </div>
+
+            <button onclick="guardarProxies()" class="w-full bg-pink-400 hover:bg-pink-500 text-stone-950 font-bold py-3 rounded-xl text-xs tracking-wide transition shadow-md shadow-pink-400/10">
+                Guardar Cambios
+            </button>
+        </div>
+    </div>
+
+    <!-- WebSockets & Gestión Optimizada de Logs -->
+    <script>
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        let ws;
+        let reqCount = 0;
+        let logQueue = [];
+        const MAX_LOGS = 100; // Límite estricto de líneas en pantalla para no saturar la RAM
+
+        function conectarWebSocket() {
+            ws = new WebSocket(wsProtocol + window.location.host + '/ws');
+
+            ws.onmessage = function(event) {
+                logQueue.push(event.data);
+                if (event.data.includes("PROXY]") || event.data.includes("DIRECTO")) {
+                    reqCount++;
+                }
+            };
+
+            ws.onclose = function() {
+                setTimeout(conectarWebSocket, 2000); // Reconexión automática si cae la web
+            };
+        }
+        conectarWebSocket();
+
+        // Bucle de renderizado eficiente sincronizado con los frames de la pantalla (60 FPS max)
+        function procesarColaLogs() {
+            if (logQueue.length > 0) {
+                const box = document.getElementById("terminal-logs");
+                const fragment = document.createDocumentFragment();
+
+                // Extraemos un lote para procesarlo de golpe
+                const lote = logQueue.splice(0, logQueue.length);
+
+                lote.forEach(msg => {
+                    const div = document.createElement("div");
+                    div.textContent = `> ${msg}`;
+                    fragment.appendChild(div);
+                });
+
+                box.appendChild(fragment);
+
+                // Recortar si supera el máximo permitido para evitar congelamientos
+                while (box.children.length > MAX_LOGS) {
+                    box.removeChild(box.firstChild);
+                }
+
+                box.scrollTop = box.scrollHeight;
+                document.getElementById("count-requests").innerText = reqCount;
+            }
+            requestAnimationFrame(procesarColaLogs);
+        }
+        requestAnimationFrame(procesarColaLogs);
+
+        function limpiarLogs() {
+            const box = document.getElementById("terminal-logs");
+            box.innerHTML = '<div>> Consola limpiada.</div>';
+            logQueue = [];
+        }
+
+        function actualizarContadores() {
+            fetch('/api/proxies/stats')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('count-socks5').innerText = data.socks5;
+                    document.getElementById('count-socks4').innerText = data.socks4;
+                    document.getElementById('count-http').innerText = data.http;
+                    document.getElementById('count-total').innerText = data.total;
+                })
+                .catch(() => {});
+        }
+        actualizarContadores();
+
+        function abrirModalProxies() {
+            document.getElementById('modalProxies').classList.remove('hidden');
+            document.getElementById('modalProxies').classList.add('flex');
+            cargarProxiesModal();
+        }
+
+        function cerrarModalProxies() {
+            document.getElementById('modalProxies').classList.remove('flex');
+            document.getElementById('modalProxies').classList.add('hidden');
+            actualizarContadores();
+        }
+
+        function cargarProxiesModal() {
+            const tipo = document.getElementById('tipoProxyModal').value;
+            fetch(`/api/proxies?tipo=${tipo}`)
+                .then(res => res.text())
+                .then(data => { document.getElementById('textareaProxies').value = data; });
+        }
+
+        function guardarProxies() {
+            const tipo = document.getElementById('tipoProxyModal').value;
+            const contenido = document.getElementById('textareaProxies').value;
+
+            fetch('/api/proxies', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo, contenido })
+            }).then(() => {
+                alert('¡Lista guardada con éxito!');
+                cerrarModalProxies();
+            });
+        }
+
+        function atacar() {
+            reqCount = 0;
+            document.getElementById("count-requests").innerText = "0";
+            const data = {
+                ip: document.getElementById("IP").value,
+                puerto: document.getElementById("puerto").value,
+                tamano: parseInt(document.getElementById("tamano").value) || 512,
+                delay: parseInt(document.getElementById("delay").value) || 0,
+                protocolo: document.getElementById("protocolo").value,
+                modo: document.getElementById("modoOrigen").value
+            };
+            fetch('/api/atacar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        }
+
+        function pararAtaque() {
+            fetch('/api/parar', { method: 'POST' });
+        }
+    </script>
+</body>
+</html>
