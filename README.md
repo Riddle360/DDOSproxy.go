@@ -42,7 +42,7 @@ Panel de control web moderno y ultrarrápido desarrollado en **Go (Golang)** con
 
 1. Clona el repositorio:
    `git clone https://github.com/Riddle360/DDOSproxy.go.git`
-   `cd TU_NUEVO_REPO`
+   `cd DDOSproxy.go`
 
 2. Asegúrate de tener la dependencia de WebSockets (`gorilla/websocket`):
    `go get github.com/gorilla/websocket`
