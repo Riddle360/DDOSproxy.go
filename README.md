@@ -10,7 +10,7 @@ Panel de control web moderno y ultrarrápido desarrollado en Go (Golang) con una
 <img width="1792" height="785" alt="image" src="https://github.com/user-attachments/assets/514526ee-f270-45dd-a7e9-0a28da667571" />
 
 ### Editor de Proxies
-<img width="1919" height="904" alt="image" src="https://github.com/user-attachments/assets/bab09761-222c-4b0b-836c-068205fe55b0" />
+<img width="1915" height="903" alt="image" src="https://github.com/user-attachments/assets/e0067046-300c-4a60-85d7-21b159877165" />
 
 ---
 
